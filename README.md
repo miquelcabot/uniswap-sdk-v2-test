@@ -12,6 +12,11 @@ Install:
 yarn install
 ```
 
+Execute:
+```
+yarn start
+```
+
 ## References
 
 * [link](#)
