@@ -21,10 +21,13 @@ const init = async () => {
 
   const slippageTolerance = new Percent('50', '10000') // 0.005
   const amountOutMin = trade.minimumAmountOut(slippageTolerance).raw
+  const amountOutMinHex = ethers.BigNumber.from(amountOutMin.toString()).toHexString()
   const path = [weth.address, dai.address]
-  const to = ''
+  const to = '0x7d60716Bb7CE4bBa5e5b6dE3125D9553A5F8217C'
   const deadline = Math.floor(Date.now() / 1000) + 60 * 20 // 20 minutes
-  const value = trade.inputAmount.raw
+  const deadlineHex = ethers.BigNumber.from(deadline.toString()).toHexString()
+  const inputAmount = trade.inputAmount.raw
+  const inputAmountHex = ethers.BigNumber.from(inputAmount.toString()).toHexString()
 
   const provider = ethers.getDefaultProvider(ChainId[chainId].toLowerCase(), {
     infura: 'https://rinkeby.infura.io/v3/b2daf36eb4d74aed8ffac330c09dd2ee'
@@ -39,15 +42,17 @@ const init = async () => {
 
   console.log(`Trying to call swapExactETHForTokens from account ${signer.address}`)
   try {
-    
     const tx = await uniswap.swapExactETHForTokens(
-      amountOutMin,
+      amountOutMinHex,
       path,
       to,
-      deadline,
-      { value, gasPrice: 20e9 }
+      deadlineHex,
+      { 
+        value: inputAmountHex, 
+        gasPrice: 20e9 
+      }
     )
-
+    console.log(2)
     console.log(`Transaction hash: ${tx.hash}`)
 
     const receipt = await tx.wait()
