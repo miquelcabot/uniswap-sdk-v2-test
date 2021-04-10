@@ -1,13 +1,14 @@
 import { ChainId, Fetcher, WETH, Route, Trade, TokenAmount, TradeType, Percent } from '@uniswap/sdk'
 import { ethers, Wallet } from 'ethers'
 
+const chainId: ChainId = ChainId.MAINNET
 const daiAddress = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
 
 const init = async () => {
-  console.log(`The chainId of "mainnet" is ${ChainId[ChainId.MAINNET]}.`)
+  console.log(`Working with chain ${ChainId[chainId]}.`)
 
-  const dai = await Fetcher.fetchTokenData(ChainId.MAINNET, daiAddress)
-  const weth = WETH[ChainId.MAINNET]
+  const dai = await Fetcher.fetchTokenData(chainId, daiAddress)
+  const weth = WETH[chainId]
   const pair = await Fetcher.fetchPairData(dai, weth)
   const route = new Route([pair], weth)
   const trade = new Trade(route, new TokenAmount(weth, '100000000000000000'), TradeType.EXACT_INPUT)
@@ -25,7 +26,7 @@ const init = async () => {
   const deadline = Math.floor(Date.now() / 1000) + 60 * 20 // 20 minutes
   const value = trade.inputAmount.raw
 
-  const provider = ethers.getDefaultProvider('mainnet', {
+  const provider = ethers.getDefaultProvider(ChainId[chainId].toLowerCase(), {
     infura: 'https://rinkeby.infura.io/v3/b2daf36eb4d74aed8ffac330c09dd2ee'
   })
   const signer = Wallet.fromMnemonic('tragic square news business dad cricket nurse athlete tide split about ring')
