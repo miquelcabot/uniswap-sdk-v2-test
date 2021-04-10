@@ -1,9 +1,8 @@
 import { ChainId, Fetcher, WETH, Route, Trade, TokenAmount, TradeType, Percent } from '@uniswap/sdk'
 import { ethers, Wallet } from 'ethers'
 
-const chainId: ChainId = ChainId.MAINNET
-const daiAddress = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
-const usdcAddress = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
+const chainId: ChainId = ChainId.RINKEBY
+const daiAddress = '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa'
 
 const init = async () => {
   console.log(`Working with chain ${ChainId[chainId]}.`)
@@ -12,7 +11,7 @@ const init = async () => {
   const weth = WETH[chainId]
   const pair = await Fetcher.fetchPairData(dai, weth)
   const route = new Route([pair], weth)
-  const trade = new Trade(route, new TokenAmount(weth, '100000000000000000'), TradeType.EXACT_INPUT)
+  const trade = new Trade(route, new TokenAmount(weth, '100000000000000000'), TradeType.EXACT_INPUT) // 0.1 ETH
 
   console.log(`1 ETH = ${route.midPrice.toSignificant(6)} DAI`)
   console.log(`1 DAI = ${route.midPrice.invert().toSignificant(6)} ETH`)
@@ -53,7 +52,6 @@ const init = async () => {
         gasPrice: 20e9 
       }
     )
-    console.log(2)
     console.log(`Transaction hash: ${tx.hash}`)
 
     const receipt = await tx.wait()
